@@ -2,16 +2,15 @@ import "./index.css";
 import { render } from "solid-js/web";
 import { LocaleContext, createLocaleContext } from "./i18n";
 import { LocaleSwitch, PaluSelect } from "./components";
-import { createSignal, For } from "solid-js";
+import { createSignal, For, Show } from "solid-js";
 import {
   PaluIds,
-  decodePaluParentKey,
   formatPaluParentKey,
   oneParentFindRecipes,
   palChildFindMap,
   palRecipesMap,
 } from "./datas";
-
+type PalRecipes = [PaluIds, PaluIds, PaluIds];
 function App() {
   const localeContext = createLocaleContext();
   const { useT } = localeContext;
@@ -19,7 +18,7 @@ function App() {
   const [palId1, setPaluId1] = createSignal<PaluIds | null>(null);
   const [palId2, setPaluId2] = createSignal<PaluIds | null>(null);
   const [palChild, setPaluChild] = createSignal<PaluIds | null>(null);
-  const [results, setResults] = createSignal<string[]>(null);
+  const [results, setResults] = createSignal<PalRecipes[]>([]);
   function translatePalRecipe(p1: PaluIds, p2: PaluIds, child: PaluIds) {
     return `${t(`pal.${p1}`)} + ${t(`pal.${p2}`)} => ${t(`pal.${child}`)}`;
   }
@@ -28,14 +27,18 @@ function App() {
       const key = formatPaluParentKey(palId1(), palId2());
       const child = palRecipesMap.get(key);
       if (child) {
-        const recipeString = translatePalRecipe(palId1(), palId2(), child);
+        const recipe = [palId1(), palId2(), child] as [
+          PaluIds,
+          PaluIds,
+          PaluIds,
+        ];
         if (palChild()) {
-          setResults([palChild() === child ? recipeString : "not found"]);
+          setResults(palChild() === child ? [recipe] : []);
         } else {
-          setResults([recipeString]);
+          setResults([recipe]);
         }
       } else {
-        setResults(["not found"]);
+        setResults([]);
       }
       return;
     }
@@ -43,10 +46,10 @@ function App() {
     //
     if (palId1() || palId2()) {
       const palKey = palId1() || palId2();
-      const recipes = [];
+      const recipes = [] as PalRecipes[];
       oneParentFindRecipes.get(palKey).forEach(([p1, p2, child]) => {
         if (!childPal || child === childPal) {
-          recipes.push(translatePalRecipe(p1, p2, child));
+          recipes.push([p1, p2, child]);
         }
       });
       setResults(recipes);
@@ -55,7 +58,7 @@ function App() {
     if (childPal) {
       const recipes = [];
       palChildFindMap.get(childPal).forEach(([p1, p2]) => {
-        recipes.push(translatePalRecipe(p1, p2, childPal));
+        recipes.push([p1, p2, childPal]);
       });
       setResults(recipes);
     }
@@ -100,8 +103,16 @@ function App() {
           </button>
         </div>
         <div class="p-4">
-          <For each={results()}>{(result) => <div>{result}</div>}</For>
-          <div class="grid" />
+          <Show
+            when={results().length > 0}
+            fallback={<span>{t("not-found")}</span>}
+          >
+            <For each={results()}>
+              {([p1, p2, child]) => (
+                <div>{translatePalRecipe(p1, p2, child)}</div>
+              )}
+            </For>
+          </Show>
         </div>
       </div>
     </LocaleContext.Provider>

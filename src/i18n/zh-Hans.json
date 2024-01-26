@@ -1,8 +1,10 @@
 {
   "pal-list-empty": "没有找到符合条件的帕鲁",
   "pal-select-placeholder": "请选择帕鲁",
+  "pal-select-clear-button": "清除",
   "search-button": "搜索",
   "reset-button": "重置",
+  "not-found": "没有找到符合条件的帕鲁",
   "pal": {
     "100": "阿努比斯",
     "101": "复海龙",

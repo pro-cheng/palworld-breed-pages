@@ -100,6 +100,9 @@ export function PaluSelect(props: {
       setIsShow(false);
     }
   });
+  function clear() {
+    setCurrentPalu(null);
+  }
   return (
     <div ref={setEl}>
       <div class="relative">
@@ -134,14 +137,17 @@ export function PaluSelect(props: {
             class="absolute z-10 mt-1 max-h-56 w-full rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm overflow-hidden flex flex-col"
             tabindex="-1"
           >
-            <div class="m-1">
+            <div class="m-3 flex gap-2">
               <input
-                class="sticky top-0 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 flex-shrink-0"
+                class="top-0 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 flex-1"
                 ref={(el) => (input = el)}
                 type="text"
                 onInput={onInput}
                 onKeyDown={onKeydown}
               />
+              <button class="btn btn-primary flex-shrink-0" onClick={clear}>
+                {t("pal-select-clear-button")}
+              </button>
             </div>
             <ul
               class="overflow-auto flex-1"

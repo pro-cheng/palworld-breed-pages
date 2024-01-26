@@ -2,7 +2,9 @@
   "pal-list-empty": "No matching pals found",
   "pal-select-placeholder": "Please select a pal",
   "search-button": "Search",
+  "pal-select-clear-button": "Clear",
   "reset-button": "Reset",
+  "not-found": "Not found",
   "pal": {
     "100": "anubis",
     "101": "jormuntide",
