@@ -24,8 +24,23 @@ export const i18nMap = {
   },
 } as const;
 
+function matchLanguage(languages: string[], locale: string): boolean {
+  return languages.some((l) => l.startsWith(locale));
+}
+function getValidLocale(locales: readonly string[]): LocaleEnum {
+  for (const locale of locales) {
+    if (matchLanguage(["zh-CN"], locale)) {
+      return LocaleEnum.zhHans;
+    }
+    if (matchLanguage(["zh-TW", "zh-HK", "zh-MO"], locale)) {
+      return LocaleEnum.zhHant;
+    }
+  }
+  return LocaleEnum.en;
+}
 export function createLocaleContext() {
-  const [locale, setLocale] = createSignal<LocaleEnum>(LocaleEnum.zhHans);
+  const language = getValidLocale(navigator.languages);
+  const [locale, setLocale] = createSignal<LocaleEnum>(language);
   const dict = createMemo(() =>
     i18n.flatten(i18nMap[locale()].dict as typeof zhHans),
   );

@@ -25,7 +25,7 @@ export function LocaleSwitch() {
     if (!_locale) {
       return "";
     }
-    i18nMap[_locale].label;
+    return i18nMap[_locale].label;
   });
   return (
     <div ref={setEl} class="relative inline-block text-left">
