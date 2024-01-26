@@ -1,3 +1,6 @@
+/**
+ * Some recipes do not follow algorithm implementation, here constant table is used as a substitute
+ */
 export const fixedPaluBreed = [
   [
     "033B",
