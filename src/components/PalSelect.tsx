@@ -1,17 +1,17 @@
 import { Resolved } from "@solid-primitives/i18n";
-import { For, createMemo, createSignal, useContext, Show } from "solid-js";
-import { LocaleContext } from "../i18n";
+import { For, createMemo, createSignal, Show } from "solid-js";
+import { useLocaleContext } from "../i18n";
 import { keywordMatch } from "../utils";
 import { paldata, PaluIds } from "../datas";
 import { useClickOutside } from "../hooks/useClickOutside";
 import clsx from "clsx";
 
 export function PaluSelect(props: {
-  palId: PaluIds;
-  onPaluChange: (palId: PaluIds) => void;
+  palId: PaluIds | null;
+  onPaluChange: (palId: PaluIds | null) => void;
 }) {
   // locale context
-  const { chain, locale, useT } = useContext(LocaleContext);
+  const { locale, useT, chain } = useLocaleContext();
   const t = useT();
   function buildPluDataWithLabel() {
     const palChained = chain().pal;
@@ -37,9 +37,8 @@ export function PaluSelect(props: {
     setKeyWord(value);
   }
   // 键盘高亮
-  const [currentActiveSelect, setCurrentActiveSelect] = createSignal<
-    number | null
-  >(null);
+  const [currentActiveSelect, setCurrentActiveSelect] =
+    createSignal<number>(-1);
   let scroll: HTMLUListElement | null = null;
   const onKeydown = (e: KeyboardEvent) => {
     switch (e.key) {
@@ -69,15 +68,16 @@ export function PaluSelect(props: {
   // pal select
   let input: HTMLInputElement | null = null;
   const currentPalu = () => props.palId;
-  const setCurrentPalu = (id: PaluIds) => {
+  const setCurrentPalu = (id: PaluIds | null) => {
     props.onPaluChange?.(id);
   };
   const currentPaluLabel = createMemo(() => {
     const palChained = chain().pal;
-    if (!currentPalu()) {
+    const _currentPalu = currentPalu();
+    if (!_currentPalu) {
       return t("pal-select-placeholder");
     }
-    return palChained[currentPalu()]();
+    return palChained[_currentPalu]();
   });
 
   // show popover
@@ -85,7 +85,7 @@ export function PaluSelect(props: {
   function showPopover() {
     setIsShow(true);
     // reset
-    setCurrentActiveSelect(null);
+    setCurrentActiveSelect(-1);
     setTimeout(() => {
       input?.focus();
     });

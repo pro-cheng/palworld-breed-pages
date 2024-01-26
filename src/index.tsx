@@ -23,8 +23,10 @@ function App() {
     return `${t(`pal.${p1}`)} + ${t(`pal.${p2}`)} => ${t(`pal.${child}`)}`;
   }
   function search() {
-    if (palId1() && palId2()) {
-      const key = formatPaluParentKey(palId1(), palId2());
+    const _palId1 = palId1();
+    const _palId2 = palId2();
+    if (_palId1 && _palId2) {
+      const key = formatPaluParentKey(_palId1, _palId2);
       const child = palRecipesMap.get(key);
       if (child) {
         const recipe = [palId1(), palId2(), child] as [
@@ -44,10 +46,10 @@ function App() {
     }
     const childPal = palChild();
     //
-    if (palId1() || palId2()) {
-      const palKey = palId1() || palId2();
+    if (_palId1 || _palId2) {
+      const palKey = (_palId1 || _palId2) as PaluIds;
       const recipes = [] as PalRecipes[];
-      oneParentFindRecipes.get(palKey).forEach(([p1, p2, child]) => {
+      oneParentFindRecipes.get(palKey)?.forEach(([p1, p2, child]) => {
         if (!childPal || child === childPal) {
           recipes.push([p1, p2, child]);
         }
@@ -56,8 +58,8 @@ function App() {
       return;
     }
     if (childPal) {
-      const recipes = [];
-      palChildFindMap.get(childPal).forEach(([p1, p2]) => {
+      const recipes = [] as PalRecipes[];
+      palChildFindMap.get(childPal)?.forEach(([p1, p2]) => {
         recipes.push([p1, p2, childPal]);
       });
       setResults(recipes);
@@ -67,7 +69,7 @@ function App() {
     setPaluId1(null);
     setPaluId2(null);
     setPaluChild(null);
-    setResults(null);
+    setResults([]);
   }
   return (
     <LocaleContext.Provider value={localeContext}>
@@ -119,4 +121,4 @@ function App() {
   );
 }
 
-render(() => <App />, document.getElementById("app"));
+render(() => <App />, document.getElementById("app")!);

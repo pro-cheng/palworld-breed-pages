@@ -1,4 +1,4 @@
-import { createContext, createMemo, createSignal } from "solid-js";
+import { createContext, createMemo, createSignal, useContext } from "solid-js";
 import en from "./en.json";
 import zhHans from "./zh-Hans.json";
 import zhHant from "./zh-Hant.json";
@@ -22,7 +22,7 @@ export const i18nMap = {
     dict: zhHant,
     label: "繁體中文",
   },
-};
+} as const;
 
 export function createLocaleContext() {
   const [locale, setLocale] = createSignal<LocaleEnum>(LocaleEnum.zhHans);
@@ -41,3 +41,10 @@ export function createLocaleContext() {
 }
 export const LocaleContext =
   createContext<ReturnType<typeof createLocaleContext>>();
+export function useLocaleContext() {
+  const context = useContext(LocaleContext);
+  if (!context) {
+    throw new Error("LocaleContext not found");
+  }
+  return context;
+}

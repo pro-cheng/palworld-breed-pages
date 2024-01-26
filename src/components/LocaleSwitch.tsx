@@ -1,10 +1,10 @@
-import { useContext, Show, createSignal, createMemo, For } from "solid-js";
-import { LocaleContext, LocaleEnum, i18nMap } from "../i18n";
+import { Show, createSignal, createMemo, For } from "solid-js";
+import { LocaleEnum, i18nMap, useLocaleContext } from "../i18n";
 import { DropdownIcon } from "./DropdownIcon";
 import { useClickOutside } from "../hooks/useClickOutside";
 import clsx from "clsx";
 export function LocaleSwitch() {
-  const { locale, setLocale } = useContext(LocaleContext);
+  const { locale, setLocale } = useLocaleContext();
   const [isShow, setIsShow] = createSignal(false);
 
   const i18nList = createMemo(() =>
@@ -20,6 +20,13 @@ export function LocaleSwitch() {
     setIsShow(false);
   }
   const { setEl } = useClickOutside(() => setIsShow(false));
+  const currentLocaleLabel = createMemo(() => {
+    const _locale = locale();
+    if (!_locale) {
+      return "";
+    }
+    i18nMap[_locale].label;
+  });
   return (
     <div ref={setEl} class="relative inline-block text-left">
       <div
@@ -28,7 +35,7 @@ export function LocaleSwitch() {
         aria-expanded={isShow()}
         aria-haspopup={isShow()}
       >
-        <span>{i18nMap[locale()].label}</span>
+        <span>{currentLocaleLabel()}</span>
         <DropdownIcon />
       </div>
       <Show when={isShow()}>
