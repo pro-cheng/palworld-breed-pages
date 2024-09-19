@@ -1,3 +1,3 @@
 ## palworld pal breed search
 
-goto: [web site](https://palworld-breed.vercel.app/)
+goto: [palworld breeding calculator](https://palworld-breed-calculator.vercel.app/)
