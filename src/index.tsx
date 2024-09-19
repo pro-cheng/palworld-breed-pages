@@ -76,6 +76,7 @@ function App() {
       <div class="flex justify-end w-full">
         <LocaleSwitch />
       </div>
+      <div class="flex justify-center items-center p-8 text-xl"><h1><a href="https://www.palworldbreed.com/">Palworld Breeding Calculator</a></h1></div>
       <div class="p-4">
         <div class="flex gap-10 items-center flex-wrap md:flex-nowrap">
           <div class="flex-1 flex items-center gap-2 sm:w-full">
